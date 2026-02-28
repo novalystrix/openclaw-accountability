@@ -1,0 +1,51 @@
+{
+  "id": "accountability",
+  "name": "Accountability",
+  "description": "Autonomous accountability work sessions with Monday.com integration",
+  "version": "0.1.0",
+  "skills": ["skills/accountability"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": { "type": "boolean" },
+      "mondayApiToken": { "type": "string" },
+      "boardId": { "type": "integer" },
+      "timezone": { "type": "string", "default": "Asia/Jerusalem" },
+      "messagingHours": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "start": { "type": "integer", "minimum": 0, "maximum": 23, "default": 8 },
+          "end": { "type": "integer", "minimum": 0, "maximum": 23, "default": 22 }
+        }
+      },
+      "workSessionInterval": { "type": "string", "default": "1h" },
+      "completionRules": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ownerOnly": { "type": "boolean", "default": true }
+        }
+      },
+      "columns": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": { "type": "string", "default": "color_mm0yr4nm" },
+          "checkFrequency": { "type": "string", "default": "text_mm0y6b8r" },
+          "lastChecked": { "type": "string", "default": "date_mm0y8p9j" },
+          "details": { "type": "string", "default": "long_text_mm0yce5e" },
+          "assignedBy": { "type": "string", "default": "color_mm10z99x" }
+        }
+      }
+    },
+    "required": ["mondayApiToken", "boardId"]
+  },
+  "uiHints": {
+    "mondayApiToken": { "label": "Monday.com API Token", "sensitive": true },
+    "boardId": { "label": "Board ID" },
+    "timezone": { "label": "Timezone" },
+    "workSessionInterval": { "label": "Work Session Interval" }
+  }
+}

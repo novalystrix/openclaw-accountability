@@ -1,0 +1,20 @@
+{
+  "name": "openclaw-accountability",
+  "version": "0.1.0",
+  "description": "OpenClaw plugin for accountability work sessions with Monday.com",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@sinclair/typebox": "^0.32.0"
+  },
+  "peerDependencies": {
+    "openclaw": "*"
+  },
+  "license": "MIT"
+}
