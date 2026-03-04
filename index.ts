@@ -11,8 +11,11 @@ import {
 } from "./src/monday.js";
 
 export default function (api: OpenClawPluginApi) {
+  const cfg = (api.pluginConfig ?? {}) as any;
+  const ownerName: string = cfg.ownerName ?? "Owner";
+  const agentName: string = cfg.agentName ?? "Agent";
+
   const getConfig = (): MondayConfig => {
-    const cfg = api.getConfig() as any;
     return {
       apiToken: cfg.mondayApiToken,
       boardId: cfg.boardId,
@@ -44,11 +47,11 @@ export default function (api: OpenClawPluginApi) {
   api.registerTool({
     name: "accountability_create_item",
     description:
-      "Create a new accountability item on the Monday.com board. Set assignedBy to 'Roy' for owner-assigned tasks (only owner can mark Done) or 'Nova' for self-assigned tasks.",
+      `Create a new accountability item on the Monday.com board. Set assignedBy to '${ownerName}' for owner-assigned tasks (only owner can mark Done) or '${agentName}' for self-assigned tasks.`,
     parameters: Type.Object({
       name: Type.String({ description: "Item title" }),
       details: Type.String({ description: "Full details: goal, definition of done, constraints, what NOT to do" }),
-      assignedBy: Type.Union([Type.Literal("Roy"), Type.Literal("Nova")], { description: "Who assigned this task" }),
+      assignedBy: Type.String({ description: `Who assigned this task (e.g. '${ownerName}' or '${agentName}')` }),
     }),
     async execute(_id, params) {
       const id = await createItem(getConfig(), params.name, params.details, params.assignedBy);
@@ -97,7 +100,7 @@ export default function (api: OpenClawPluginApi) {
   api.registerTool({
     name: "accountability_set_status",
     description:
-      "Change an accountability item's status. ENFORCES COMPLETION RULES: If the item is assigned by Roy, you CANNOT set status to 'Done' — use 'suggest_done' instead which writes an update suggesting completion without changing status. Only 'Working on it', 'Stuck', or 'suggest_done' are allowed for Roy-assigned items.",
+      `Change an accountability item's status. ENFORCES COMPLETION RULES: If the item is assigned by the owner (${ownerName}), you CANNOT set status to 'Done' — use 'suggest_done' instead which writes an update suggesting completion without changing status. Only 'Working on it', 'Stuck', or 'suggest_done' are allowed for owner-assigned items.`,
     parameters: Type.Object({
       itemId: Type.String({ description: "Item ID" }),
       status: Type.Union(
@@ -107,7 +110,7 @@ export default function (api: OpenClawPluginApi) {
           Type.Literal("Stuck"),
           Type.Literal("suggest_done"),
         ],
-        { description: "New status. Use 'suggest_done' for Roy-assigned items you think are complete." }
+        { description: `New status. Use 'suggest_done' for ${ownerName}-assigned items you think are complete.` }
       ),
     }),
     async execute(_id, params) {
@@ -126,11 +129,11 @@ export default function (api: OpenClawPluginApi) {
         // Check if Roy-assigned
         const items = await listActiveItems(config);
         const item = items.find(i => i.id === params.itemId);
-        if (item?.assignedBy === "Roy") {
+        if (item?.assignedBy === ownerName) {
           return {
             content: [{
               type: "text",
-              text: `BLOCKED: Item ${params.itemId} is assigned by Roy. Cannot mark as Done. Use status='suggest_done' instead.`,
+              text: `BLOCKED: Item ${params.itemId} is assigned by ${ownerName}. Cannot mark as Done. Use status='suggest_done' instead.`,
             }],
           };
         }

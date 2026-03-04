@@ -11,6 +11,8 @@
       "enabled": { "type": "boolean" },
       "mondayApiToken": { "type": "string" },
       "boardId": { "type": "integer" },
+      "ownerName": { "type": "string", "default": "Owner" },
+      "agentName": { "type": "string", "default": "Agent" },
       "timezone": { "type": "string", "default": "Asia/Jerusalem" },
       "messagingHours": {
         "type": "object",
@@ -45,6 +47,8 @@
   "uiHints": {
     "mondayApiToken": { "label": "Monday.com API Token", "sensitive": true },
     "boardId": { "label": "Board ID" },
+    "ownerName": { "label": "Owner Name" },
+    "agentName": { "label": "Agent Name" },
     "timezone": { "label": "Timezone" },
     "workSessionInterval": { "label": "Work Session Interval" }
   }

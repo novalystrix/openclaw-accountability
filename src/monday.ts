@@ -97,7 +97,7 @@ export async function listActiveItems(config: MondayConfig): Promise<Accountabil
   });
 }
 
-export async function createItem(config: MondayConfig, name: string, details: string, assignedBy: "Roy" | "Nova"): Promise<string> {
+export async function createItem(config: MondayConfig, name: string, details: string, assignedBy: string): Promise<string> {
   const colValues = JSON.stringify({
     [config.columns.details]: { text: details },
     [config.columns.assignedBy]: { label: assignedBy },
